@@ -1,5 +1,4 @@
-import { Component, Prop, h } from '@stencil/core';
-import { format } from '../../utils/utils';
+import { Component, Event, EventEmitter, Method, Prop, h } from '@stencil/core';
 
 @Component({
   tag: 'my-component',
@@ -8,25 +7,83 @@ import { format } from '../../utils/utils';
 })
 export class MyComponent {
   /**
-   * The first name
+   * The placeholder text
    */
-  @Prop() first: string;
+  @Prop() placeholder: string;
 
   /**
-   * The middle name
+   * The input name
    */
-  @Prop() middle: string;
+  @Prop() name: string;
 
   /**
-   * The last name
+   * The class name
    */
-  @Prop() last: string;
+  @Prop() class: string;
+  /**
+   * The type
+   */
+  @Prop() type: string;
+  /**
+  * The default value
+  */
+  @Prop() value: string;
+  /**
+* The disabled
+*/
+  @Prop() disabled = false
+  /**
+* The autoFocus
+*/
+  @Prop() autoFocus = false
+  /**
+* The height
+*/
+  @Prop() height: any
+  /**
+* The height
+*/
+  @Prop() width: any
 
-  private getText(): string {
-    return format(this.first, this.middle, this.last);
+  /**
+   * Event listener for any changes in input field
+   *
+   * @type {EventEmitter}
+   * @memberof Input
+   */
+  @Event() textValue: EventEmitter;
+
+
+  /**
+ * this method called on any change in input field
+ * it validates the field information
+ * @param {*} event
+ * @memberof Input
+ */
+  @Method()
+  async handleChange(event) {
+    if (event && event.target) {
+      this.textValue.emit({ value: event.target.value });
+    }
+
   }
 
   render() {
-    return <div>Hello, World! I'm {this.getText()}</div>;
+    return <div>
+      <p>My Stencil Input Component</p>
+
+      <input
+        class={this.class}
+        type={this.type}
+        name={this.name}
+        placeholder={this.placeholder}
+        value={this.value}
+        onInput={event => this.handleChange(event)}
+        disabled={this.disabled}
+        autofocus={this.autoFocus}
+        height={this.height}
+        width={this.width}
+      />
+    </div>;
   }
 }
